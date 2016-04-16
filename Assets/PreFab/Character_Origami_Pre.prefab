@@ -42,7 +42,6 @@ GameObject:
   - 4: {fileID: 468354}
   - 58: {fileID: 5800532}
   - 50: {fileID: 5052518}
-  - 61: {fileID: 6166736}
   - 114: {fileID: 11414908}
   - 114: {fileID: 11494070}
   - 114: {fileID: 11488538}
@@ -87,7 +86,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 161590}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.6034732, z: 0}
+  m_LocalPosition: {x: 0, y: -1.01, z: 0}
   m_LocalScale: {x: 0.56448287, y: 0.5644837, z: 1}
   m_Children: []
   m_Father: {fileID: 468354}
@@ -147,23 +146,9 @@ CircleCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_Offset: {x: 0, y: -0.45}
-  serializedVersion: 2
-  m_Radius: 0.16
---- !u!61 &6166736
-BoxCollider2D:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 144480}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: 0.25, y: 0.68}
+  m_Radius: 0.99
 --- !u!95 &9546074
 Animator:
   serializedVersion: 3
@@ -203,9 +188,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b40a5018cd38274582cc890a5bc6d9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  o_Fox: 0
+  o_Fox: 1
   o_Fish: 0
-  o_Fly: 0
+  o_Bird: 0
 --- !u!114 &11494070
 MonoBehaviour:
   m_ObjectHideFlags: 1

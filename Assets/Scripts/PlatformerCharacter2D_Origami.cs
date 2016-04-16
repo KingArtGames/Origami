@@ -31,7 +31,9 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
     const float k_CeilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
     private Animator m_Anim;            // Reference to the player's animator component.
     private Rigidbody2D m_Rigidbody2D;
+    private CharachterStatus_Origami m_CharachterStatus_Origami;
     private SkinnedMeshRenderer m_SkinnedMeshRenderer;
+
     private bool m_FacingRight = true;  // For determining which way the player is currently facing.
     private CharacterShapes currentCharacterShape = CharacterShapes.Shape1; // Shape1 is our default shape
     private int numBlendShapes = 3;
@@ -47,6 +49,7 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
         m_CeilingCheck = transform.Find("CeilingCheck");
         m_Anim = GetComponent<Animator>();
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
+        m_CharachterStatus_Origami = GetComponent<CharachterStatus_Origami>();
         m_SkinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
     }
 
@@ -136,8 +139,20 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
 
     private void ShapeShift(CharacterShapes theShape)
     {
-        currentCharacterShape = theShape != CharacterShapes.none ? theShape : currentCharacterShape;
+        CharacterShapes newChar = theShape != CharacterShapes.none ? theShape : currentCharacterShape;
 
+        // check if characters have been unlocked
+        if (newChar == CharacterShapes.Shape2 && !m_CharachterStatus_Origami.o_Fish)
+            newChar = currentCharacterShape;
+
+        if (newChar == CharacterShapes.Shape3 && !m_CharachterStatus_Origami.o_Bird)
+            newChar = currentCharacterShape;
+
+        // assign requested shape to current character shape
+        currentCharacterShape = newChar;
+
+
+        // process blend weights
         for (int i = 0; i < numBlendShapes; i++)
         {
             float currWeight = m_SkinnedMeshRenderer.GetBlendShapeWeight(i);

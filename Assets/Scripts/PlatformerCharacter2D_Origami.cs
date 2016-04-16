@@ -17,12 +17,11 @@ namespace UnityStandardAssets._2D
         [SerializeField] private float m_MaxSpeed = 10f;                    // The fastest the player can travel in the x axis.
         [SerializeField] private float m_JumpForce = 400f;                  // Amount of force added when the player jumps.
         [SerializeField] private float m_DoubleJumpForce = 800f;                  // Amount of force added when the player double jumps.
-        [Range(0, 1)] [SerializeField] private float m_CrouchSpeed = .36f;  // Amount of maxSpeed applied to crouching movement. 1 = 100%
         [SerializeField] private float m_TurnSpeed = 5f;
+        [SerializeField] private float m_AirSpeed = 5f;
         [SerializeField] private float blendSpeed = 100;                      // Speed used for blending
         [SerializeField] private bool m_AirControl = false;                 // Whether or not a player can steer while jumping;
         [SerializeField] private LayerMask m_WhatIsGround;                  // A mask determining what is ground to the character
-        
 
         private Transform m_GroundCheck;    // A position marking where to check if the player is grounded.
         const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
@@ -114,18 +113,16 @@ namespace UnityStandardAssets._2D
         {
             currentCharacterShape = theShape != CharacterShapes.none ? theShape : currentCharacterShape;
 
-            for (int i = 0; i < numBlendShapes-1; i++)
+            for (int i = 0; i < numBlendShapes; i++)
             {
                 float currWeight = m_SkinnedMeshRenderer.GetBlendShapeWeight(i);
                 if (i == (int)currentCharacterShape)
                 {
-                    m_SkinnedMeshRenderer.SetBlendShapeWeight(i, Mathf.Lerp(currWeight, 100, Time.deltaTime * blendSpeed));
-                    //m_SkinnedMeshRenderer.SetBlendShapeWeight(i, Mathf.Clamp(currWeight + Time.deltaTime * blendSpeed, 0, 100));
+                    m_SkinnedMeshRenderer.SetBlendShapeWeight(i, Mathf.Lerp(0, 100, (currWeight / 100) + Time.deltaTime * blendSpeed));
                 }
                 else
                 {
-                    m_SkinnedMeshRenderer.SetBlendShapeWeight(i, Mathf.Lerp(currWeight, 0, Time.deltaTime * blendSpeed));
-                    //m_SkinnedMeshRenderer.SetBlendShapeWeight(i, Mathf.Clamp(currWeight - Time.deltaTime * blendSpeed, 0, 100));
+                    m_SkinnedMeshRenderer.SetBlendShapeWeight(i, Mathf.Lerp(0, 100, (currWeight / 100) - Time.deltaTime * blendSpeed));
                 }
             }
         }

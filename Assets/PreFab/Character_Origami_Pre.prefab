@@ -15,6 +15,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &118150
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 442944}
+  - 137: {fileID: 13791910}
+  - 95: {fileID: 9546074}
+  m_Layer: 0
+  m_Name: char_mesh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &144480
 GameObject:
   m_ObjectHideFlags: 0
@@ -26,7 +43,6 @@ GameObject:
   - 58: {fileID: 5800532}
   - 50: {fileID: 5052518}
   - 61: {fileID: 6166736}
-  - 137: {fileID: 13720268}
   - 114: {fileID: 11414908}
   - 114: {fileID: 11494070}
   - 114: {fileID: 11488538}
@@ -52,6 +68,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!4 &442944
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 118150}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 468354}
+  m_RootOrder: 2
 --- !u!4 &455218
 Transform:
   m_ObjectHideFlags: 1
@@ -71,11 +99,12 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 144480}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.268, y: 8.9814, z: 0}
+  m_LocalPosition: {x: -12.89, y: -0.19, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 455218}
   - {fileID: 473814}
+  - {fileID: 442944}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &473814
@@ -135,6 +164,23 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: 0.25, y: 0.68}
+--- !u!95 &9546074
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 118150}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: cf2049665a4325b42b92587c72f80557, type: 3}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &11414908
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -172,21 +218,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MaxSpeed: 10
+  m_AirSpeed: 5
+  m_SpeedLerpFactor: 5
   m_JumpForce: 400
   m_DoubleJumpForce: 800
   m_TurnSpeed: 5
-  m_AirSpeed: 5
-  blendSpeed: 100
+  m_BirdWingCooldown: 1
+  blendSpeed: 8
   m_AirControl: 1
   m_WhatIsGround:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!137 &13720268
+--- !u!137 &13791910
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 144480}
+  m_GameObject: {fileID: 118150}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -209,7 +257,7 @@ SkinnedMeshRenderer:
   m_SortingOrder: 0
   serializedVersion: 2
   m_Quality: 0
-  m_UpdateWhenOffscreen: 0
+  m_UpdateWhenOffscreen: 1
   m_Mesh: {fileID: 4300004, guid: cf2049665a4325b42b92587c72f80557, type: 3}
   m_Bones: []
   m_BlendShapeWeights: []

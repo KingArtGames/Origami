@@ -10,6 +10,7 @@ public class CharachterStatus_Origami : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Destroy(other.gameObject);
+        if (other.gameObject.tag == "Item")
+            Destroy(other.gameObject);
     }
 }

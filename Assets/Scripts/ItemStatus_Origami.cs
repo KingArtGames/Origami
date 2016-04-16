@@ -4,9 +4,9 @@ using System.Collections;
 public class ItemStatus_Origami : MonoBehaviour {
 
     public enum ItemEnum { Fox=0, Fish=1, Fly=2 };
-    public CharachterStatus_Origami charachterStatus_Origami;
+    private CharachterStatus_Origami charachterStatus_Origami;
     public ItemEnum ItemPick;
-    public bool ItemGive;
+    private bool ItemGive;
 
     void OnTriggerEnter2D(Collider2D other)
     {

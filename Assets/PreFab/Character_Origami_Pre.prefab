@@ -17,7 +17,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &118150
 GameObject:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
@@ -32,6 +32,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &129398
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 458358}
+  m_Layer: 0
+  m_Name: char_mesh_pivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &144480
 GameObject:
   m_ObjectHideFlags: 0
@@ -40,11 +55,11 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 468354}
-  - 58: {fileID: 5800532}
   - 50: {fileID: 5052518}
   - 114: {fileID: 11414908}
   - 114: {fileID: 11494070}
   - 114: {fileID: 11488538}
+  - 58: {fileID: 5857998}
   m_Layer: 0
   m_Name: Character_Origami_Pre
   m_TagString: Player
@@ -77,8 +92,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 468354}
-  m_RootOrder: 2
+  m_Father: {fileID: 458358}
+  m_RootOrder: 0
 --- !u!4 &455218
 Transform:
   m_ObjectHideFlags: 1
@@ -91,6 +106,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 468354}
   m_RootOrder: 0
+--- !u!4 &458358
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 129398}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 442944}
+  m_Father: {fileID: 468354}
+  m_RootOrder: 2
 --- !u!4 &468354
 Transform:
   m_ObjectHideFlags: 1
@@ -98,12 +126,12 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 144480}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.89, y: -0.19, z: 0}
+  m_LocalPosition: {x: -24.529, y: -2.568, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 455218}
   - {fileID: 473814}
-  - {fileID: 442944}
+  - {fileID: 458358}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &473814
@@ -113,7 +141,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 111640}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.36, z: 0}
+  m_LocalPosition: {x: 0, y: 1.003, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 468354}
@@ -135,7 +163,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!58 &5800532
+--- !u!58 &5857998
 CircleCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -143,12 +171,12 @@ CircleCollider2D:
   m_GameObject: {fileID: 144480}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3626fe8e008014f6bbd19bb72937b311, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.99
+  m_Radius: 0.97
 --- !u!95 &9546074
 Animator:
   serializedVersion: 3
@@ -204,7 +232,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MaxSpeed: 10
   m_AirSpeed: 5
-  m_SpeedLerpFactor: 5
+  m_GroundToAirSpeedFactor: 5
+  m_AirDragFactor: 3
   m_JumpForce: 400
   m_DoubleJumpForce: 800
   m_TurnSpeed: 5

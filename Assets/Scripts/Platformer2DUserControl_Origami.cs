@@ -5,6 +5,8 @@ using UnityStandardAssets.CrossPlatformInput;
 [RequireComponent(typeof (PlatformerCharacter2D_Origami))]
 public class Platformer2DUserControl_Origami : MonoBehaviour
 {
+    public GameObject RespawnPoint;
+    public GameObject MainCamera;
     private PlatformerCharacter2D_Origami m_Character;
     private bool m_Jump;
     CharacterShapes m_requestedShape = CharacterShapes.none;
@@ -34,6 +36,15 @@ public class Platformer2DUserControl_Origami : MonoBehaviour
         else if (CrossPlatformInputManager.GetButtonDown("Bird"))
         {
             m_requestedShape = CharacterShapes.Bird;
+        }
+
+        if (CrossPlatformInputManager.GetButtonDown("Respawn"))
+        {
+            Vector3 respawnPos = RespawnPoint.transform.position;
+            m_Character.transform.position = respawnPos;
+
+            Vector3 camPos = MainCamera.transform.position;
+            MainCamera.transform.position = new Vector3(respawnPos.x, respawnPos.y, camPos.z);
         }
 
     }

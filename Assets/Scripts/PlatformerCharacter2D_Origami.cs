@@ -34,6 +34,7 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
     private Rigidbody2D m_Rigidbody2D;
     private CharachterStatus_Origami m_CharachterStatus_Origami;
     private SkinnedMeshRenderer m_SkinnedMeshRenderer;
+    private Transform m_charMeshPivot;
 
     private bool m_FacingRight = true;  // For determining which way the player is currently facing.
     private CharacterShapes currentCharacterShape = CharacterShapes.Fox; // Shape1 is our default shape
@@ -51,7 +52,8 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
         m_Anim = GetComponent<Animator>();
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         m_CharachterStatus_Origami = GetComponent<CharachterStatus_Origami>();
-        m_SkinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        m_charMeshPivot = transform.Find("char_mesh_pivot");
+        m_SkinnedMeshRenderer = m_charMeshPivot.GetComponentInChildren<SkinnedMeshRenderer>();
 
         ShapeShift(CharacterShapes.Fox);
     }
@@ -72,7 +74,6 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
             }
         }
     }
-
 
     public void Move(float move, bool crouch, bool jump, CharacterShapes shape)
     {
@@ -106,21 +107,20 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
                 // Add a vertical force to the player.
                 m_Grounded = false;
                 m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
-            }else{
+            }
+            else
+            {
                 doubleJumped = true;
                 currentBirdWingCooldownTime = currentCharacterShape == CharacterShapes.Bird ? m_BirdWingCooldown : 0;
                 m_Rigidbody2D.AddForce(new Vector2(0f, m_DoubleJumpForce));
             }
         }
 
-        // turn player to move direction
-        m_FacingRight = currMoveVal != 0 ? currMoveVal > 0 : m_FacingRight;
-
         ProcessCharacterAbilities(move);
         ShapeShift(shape);
     }
 
-
+    
     private void ProcessCharacterAbilities(float playerInputDir)
     {
 
@@ -136,16 +136,13 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
         Vector2 moveDirection = m_Rigidbody2D.velocity;
         if (moveDirection != Vector2.zero)
         {
-            float angleSide = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg;
-            float angleSideLerp = Mathf.LerpAngle(m_SkinnedMeshRenderer.transform.localEulerAngles.z, angleSide, Time.deltaTime * m_TurnSpeed);
-
             Quaternion upDownRot = Quaternion.LookRotation(moveDirection, Vector3.up);
-            Quaternion upDownRotLerp = Quaternion.Lerp(m_SkinnedMeshRenderer.transform.rotation, upDownRot, Time.deltaTime * m_TurnSpeed);
-            
-            m_SkinnedMeshRenderer.transform.rotation = upDownRotLerp;
+            Quaternion finalRot = Quaternion.Lerp(m_charMeshPivot.transform.rotation, upDownRot, Time.deltaTime * m_TurnSpeed);
+
+            m_charMeshPivot.transform.rotation = finalRot;
         }
     }
-
+    
     private void ShapeShift(CharacterShapes theShape)
     {
         CharacterShapes newChar = theShape != CharacterShapes.none ? theShape : currentCharacterShape;

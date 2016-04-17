@@ -12,17 +12,18 @@ public enum CharacterShapes
 
 public class PlatformerCharacter2D_Origami : MonoBehaviour
 {
-    [SerializeField] private float m_MaxSpeed = 10f;                    // The fastest the player can travel in the x axis.
+    [SerializeField] private float m_MaxSpeed = 10f;         // The fastest the player can travel in the x axis.
     [SerializeField] private float m_AirSpeed = 5f;
-    [SerializeField] private float m_SpeedLerpFactor = 5f;
-    [SerializeField] private float m_JumpForce = 400f;                  // Amount of force added when the player jumps.
-    [SerializeField] private float m_DoubleJumpForce = 800f;                  // Amount of force added when the player double jumps.
+    [SerializeField] private float m_GroundToAirSpeedFactor = 5f;
+    [SerializeField] private float m_AirDragFactor = 5f;
+    [SerializeField] private float m_JumpForce = 400f;       // Amount of force added when the player jumps.
+    [SerializeField] private float m_DoubleJumpForce = 800f; // Amount of force added when the player double jumps.
     [SerializeField] private float m_TurnSpeed = 5f;
     [SerializeField] private float m_BirdWingCooldown = 1f;
 
-    [SerializeField] private float blendSpeed = 8f;                      // Speed used for blending
-    [SerializeField] private bool m_AirControl = false;                 // Whether or not a player can steer while jumping;
-    [SerializeField] private LayerMask m_WhatIsGround;                  // A mask determining what is ground to the character
+    [SerializeField] private float blendSpeed = 8f;          // Speed used for blending
+    [SerializeField] private bool m_AirControl = false;      // Whether or not a player can steer while jumping;
+    [SerializeField] private LayerMask m_WhatIsGround;       // A mask determining what is ground to the character
 
     private Transform m_GroundCheck;    // A position marking where to check if the player is grounded.
     const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
@@ -37,9 +38,9 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
     private bool m_FacingRight = true;  // For determining which way the player is currently facing.
     private CharacterShapes currentCharacterShape = CharacterShapes.Fox; // Shape1 is our default shape
     private int numBlendShapes = 3;
-    private float currSpeed = 0f;
+    private float currGroundToAirSpeed = 0f;
     private float currentBirdWingCooldownTime = 0f;
-
+    private float currMoveVal = 0f;
     private bool doubleJumped = false;
 
     private void Awake()
@@ -51,6 +52,8 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         m_CharachterStatus_Origami = GetComponent<CharachterStatus_Origami>();
         m_SkinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+
+        ShapeShift(CharacterShapes.Fox);
     }
 
 
@@ -73,17 +76,26 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
 
     public void Move(float move, bool crouch, bool jump, CharacterShapes shape)
     {
+        if (!m_Grounded)
+        {
+            currMoveVal = Mathf.Lerp(currMoveVal, move, Time.deltaTime * m_AirDragFactor);
+        }else
+        {
+            currMoveVal = Mathf.Lerp(currMoveVal, move, Time.deltaTime * 3);
+        }
+        
+
         //only control the player if grounded or airControl is turned on
         if (m_Grounded || m_AirControl)
         {
             if (!m_Grounded)
             {
-                currSpeed = Mathf.Lerp(currSpeed, m_AirSpeed, Time.deltaTime * m_SpeedLerpFactor);
+                currGroundToAirSpeed = Mathf.Lerp(currGroundToAirSpeed, m_AirSpeed, Time.deltaTime * m_GroundToAirSpeedFactor);
             }else{
-                currSpeed = Mathf.Lerp(currSpeed, m_MaxSpeed, Time.deltaTime * 5);
+                currGroundToAirSpeed = Mathf.Lerp(currGroundToAirSpeed, m_MaxSpeed, Time.deltaTime * 5);
             }
             // Move the character
-            m_Rigidbody2D.velocity = new Vector2(move*currSpeed, m_Rigidbody2D.velocity.y);
+            m_Rigidbody2D.velocity = new Vector2(currMoveVal * currGroundToAirSpeed, m_Rigidbody2D.velocity.y);
         }
 
         // If the player should jump...
@@ -102,15 +114,14 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
         }
 
         // turn player to move direction
-        m_FacingRight = move != 0 ? move > 0 : m_FacingRight;
+        m_FacingRight = currMoveVal != 0 ? currMoveVal > 0 : m_FacingRight;
 
-        ProcessCharacterAbilities();
-        TurnPlayer();
+        ProcessCharacterAbilities(move);
         ShapeShift(shape);
     }
 
 
-    private void ProcessCharacterAbilities()
+    private void ProcessCharacterAbilities(float playerInputDir)
     {
 
         // Bird can swing it's wings, but has to wait for cooldown
@@ -122,19 +133,16 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
                 doubleJumped = false;
         }
 
-    }
-
-    private void TurnPlayer()
-    {
-        float currRotation = m_SkinnedMeshRenderer.transform.rotation.eulerAngles.y;
-
-        if (m_FacingRight)
+        Vector2 moveDirection = m_Rigidbody2D.velocity;
+        if (moveDirection != Vector2.zero)
         {
-            m_SkinnedMeshRenderer.transform.Rotate(Vector3.up, (0 - currRotation) * Time.deltaTime * m_TurnSpeed);
-        }
-        else
-        {
-            m_SkinnedMeshRenderer.transform.Rotate(Vector3.up, (180 - currRotation) * Time.deltaTime * m_TurnSpeed);
+            float angleSide = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg;
+            float angleSideLerp = Mathf.LerpAngle(m_SkinnedMeshRenderer.transform.localEulerAngles.z, angleSide, Time.deltaTime * m_TurnSpeed);
+
+            Quaternion upDownRot = Quaternion.LookRotation(moveDirection, Vector3.up);
+            Quaternion upDownRotLerp = Quaternion.Lerp(m_SkinnedMeshRenderer.transform.rotation, upDownRot, Time.deltaTime * m_TurnSpeed);
+            
+            m_SkinnedMeshRenderer.transform.rotation = upDownRotLerp;
         }
     }
 
@@ -174,7 +182,7 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
                 // main Settings
                 m_MaxSpeed = 15f;
                 m_AirSpeed = 10f;
-                m_SpeedLerpFactor = 3f;
+                m_GroundToAirSpeedFactor = 3f;
                 m_JumpForce = 400f;
                 m_DoubleJumpForce = 800f;
                 m_TurnSpeed = 8f;
@@ -187,7 +195,7 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
                 // main Settings
                 m_MaxSpeed = 10f;
                 m_AirSpeed = 5f;
-                m_SpeedLerpFactor = 5f;
+                m_GroundToAirSpeedFactor = 5f;
                 m_JumpForce = 200f;
                 m_DoubleJumpForce = 400f;
                 m_TurnSpeed = 8f;
@@ -199,7 +207,7 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
                 // main Settings
                 m_MaxSpeed = 5f;
                 m_AirSpeed = 20f;
-                m_SpeedLerpFactor = 3f;
+                m_GroundToAirSpeedFactor = 3f;
                 m_JumpForce = 200f;
                 m_DoubleJumpForce = 600f;
                 m_TurnSpeed = 8f;

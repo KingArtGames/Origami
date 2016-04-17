@@ -44,6 +44,8 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
     private float currMoveVal = 0f;
     private bool doubleJumped = false;
 
+    private int blossomCounter = 0;
+
     private void Awake()
     {
         // Setting up references.
@@ -232,5 +234,20 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
     public float GetWingCooldownTime()
     {
         return m_BirdWingCooldown;
+    }
+
+    public void RaiseBlossemCounter(int count)
+    {
+        blossomCounter += count;
+    }
+
+    public void SetBlossemCounter(int num)
+    {
+        blossomCounter = num;
+    }
+
+    public int GetBlossemCount()
+    {
+        return blossomCounter;
     }
 }

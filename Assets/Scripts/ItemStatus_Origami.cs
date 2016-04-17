@@ -3,21 +3,50 @@ using System.Collections;
 
 public class ItemStatus_Origami : MonoBehaviour {
 
-    public enum ItemEnum { Fox=0, Fish=1, Bird=2 };
-    private CharachterStatus_Origami charachterStatus_Origami;
-    public ItemEnum ItemPick;
+    public float floatSpeed = 3;
+    public float amplitude = 1;
+
+    private Vector3 startPos;
+    private float floatOffset;
+
+    public CharacterShapes ItemPick;
     private bool ItemGive;
+
+    void Start()
+    {
+        startPos = transform.position;
+        floatOffset = Random.Range(0f, 90f);
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        charachterStatus_Origami = other.GetComponent<CharachterStatus_Origami>();
-        if (ItemPick == ItemEnum.Fox)
-            charachterStatus_Origami.o_Fox=true;
-        if (ItemPick == ItemEnum.Fish)
-            charachterStatus_Origami.o_Fish = true;
-        if (ItemPick == ItemEnum.Bird)
-            charachterStatus_Origami.o_Bird = true;
+        if (other.gameObject.tag == "Player")
+        {
+            CharachterStatus_Origami charStat = other.GetComponent<CharachterStatus_Origami>();
 
-        Destroy(gameObject);
+            switch (ItemPick)
+            {
+                case CharacterShapes.Fox:
+                    charStat.o_Fox = true;
+                    break;
+                case CharacterShapes.Fish:
+                    charStat.o_Fish = true;
+                    break;
+                case CharacterShapes.Bird:
+                    charStat.o_Bird = true;
+                    break;
+                case CharacterShapes.none:
+                    break;
+                default:
+                    break;
+            }
+
+            Destroy(gameObject);
+        }
+    }
+
+    void Update()
+    {
+        transform.position = startPos + Vector3.up * +amplitude * Mathf.Sin(floatSpeed * Time.time + floatOffset);
     }
 }

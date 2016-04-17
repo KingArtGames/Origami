@@ -4,9 +4,9 @@ using UnityEngine;
 
 public enum CharacterShapes
 {
-    Shape1,
-    Shape2,
-    Shape3,
+    Fox,
+    Fish,
+    Bird,
     none
 }
 
@@ -35,7 +35,7 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
     private SkinnedMeshRenderer m_SkinnedMeshRenderer;
 
     private bool m_FacingRight = true;  // For determining which way the player is currently facing.
-    private CharacterShapes currentCharacterShape = CharacterShapes.Shape1; // Shape1 is our default shape
+    private CharacterShapes currentCharacterShape = CharacterShapes.Fox; // Shape1 is our default shape
     private int numBlendShapes = 3;
     private float currSpeed = 0f;
     private float currentBirdWingCooldownTime = 0f;
@@ -96,7 +96,7 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
                 m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
             }else{
                 doubleJumped = true;
-                currentBirdWingCooldownTime = currentCharacterShape == CharacterShapes.Shape3 ? m_BirdWingCooldown : 0;
+                currentBirdWingCooldownTime = currentCharacterShape == CharacterShapes.Bird ? m_BirdWingCooldown : 0;
                 m_Rigidbody2D.AddForce(new Vector2(0f, m_DoubleJumpForce));
             }
         }
@@ -112,11 +112,12 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
 
     private void ProcessCharacterAbilities()
     {
-        if (currentCharacterShape == CharacterShapes.Shape3)
-        { 
-            // Bird can swing it's wings, but has to wait for cooldown
-            currentBirdWingCooldownTime = Mathf.Clamp(currentBirdWingCooldownTime -= Time.deltaTime, 0, m_BirdWingCooldown);
 
+        // Bird can swing it's wings, but has to wait for cooldown
+        currentBirdWingCooldownTime = Mathf.Clamp(currentBirdWingCooldownTime -= Time.deltaTime, 0, m_BirdWingCooldown);
+
+        if (currentCharacterShape == CharacterShapes.Bird)
+        {
             if (currentBirdWingCooldownTime == 0)
                 doubleJumped = false;
         }
@@ -142,10 +143,10 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
         CharacterShapes newChar = theShape != CharacterShapes.none ? theShape : currentCharacterShape;
 
         // check if characters have been unlocked
-        if (newChar == CharacterShapes.Shape2 && !m_CharachterStatus_Origami.o_Fish)
+        if (newChar == CharacterShapes.Fish && !m_CharachterStatus_Origami.o_Fish)
             newChar = currentCharacterShape;
 
-        if (newChar == CharacterShapes.Shape3 && !m_CharachterStatus_Origami.o_Bird)
+        if (newChar == CharacterShapes.Bird && !m_CharachterStatus_Origami.o_Bird)
             newChar = currentCharacterShape;
 
         // assign requested shape to current character shape
@@ -169,7 +170,7 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
         // Set values for character shapes
         switch (currentCharacterShape)
         {
-            case CharacterShapes.Shape1: // fox
+            case CharacterShapes.Fox: // fox
                 // main Settings
                 m_MaxSpeed = 15f;
                 m_AirSpeed = 10f;
@@ -182,7 +183,7 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
                 m_Rigidbody2D.gravityScale = 3;
 
                 break;
-            case CharacterShapes.Shape2: // fish
+            case CharacterShapes.Fish: // fish
                 // main Settings
                 m_MaxSpeed = 10f;
                 m_AirSpeed = 5f;
@@ -194,7 +195,7 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
                 // rigid body settings
                 m_Rigidbody2D.gravityScale = 1;
                 break;
-            case CharacterShapes.Shape3: // bird
+            case CharacterShapes.Bird: // bird
                 // main Settings
                 m_MaxSpeed = 5f;
                 m_AirSpeed = 20f;
@@ -216,5 +217,15 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
     public CharacterShapes GetCurrentCharacterShape()
     {
         return currentCharacterShape;
+    }
+
+    public float GetCurrentWingCooldownTime()
+    {
+        return currentBirdWingCooldownTime;
+    }
+
+    public float GetWingCooldownTime()
+    {
+        return m_BirdWingCooldown;
     }
 }

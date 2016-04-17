@@ -23,17 +23,17 @@ public class Platformer2DUserControl_Origami : MonoBehaviour
             m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
         }
 
-        if (CrossPlatformInputManager.GetButtonDown("Shape1"))
+        if (CrossPlatformInputManager.GetButtonDown("Fox"))
         {
-            m_requestedShape = CharacterShapes.Shape1;
+            m_requestedShape = CharacterShapes.Fox;
         }
-        else if (CrossPlatformInputManager.GetButtonDown("Shape2"))
+        else if (CrossPlatformInputManager.GetButtonDown("Fish"))
         {
-            m_requestedShape = CharacterShapes.Shape2;
+            m_requestedShape = CharacterShapes.Fish;
         }
-        else if (CrossPlatformInputManager.GetButtonDown("Shape3"))
+        else if (CrossPlatformInputManager.GetButtonDown("Bird"))
         {
-            m_requestedShape = CharacterShapes.Shape3;
+            m_requestedShape = CharacterShapes.Bird;
         }
 
     }

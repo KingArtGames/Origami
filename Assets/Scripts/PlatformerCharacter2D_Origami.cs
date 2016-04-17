@@ -1,6 +1,7 @@
 using System;
+using System.Collections;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 
 public enum CharacterShapes
 {
@@ -24,6 +25,7 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
     [SerializeField] private float blendSpeed = 8f;          // Speed used for blending
     [SerializeField] private bool m_AirControl = false;      // Whether or not a player can steer while jumping;
     [SerializeField] private LayerMask m_WhatIsGround;       // A mask determining what is ground to the character
+    [SerializeField] private GameObject fadeToWhitePlane;
 
     private Transform m_GroundCheck;    // A position marking where to check if the player is grounded.
     const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
@@ -35,6 +37,8 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
     private CharachterStatus_Origami m_CharachterStatus_Origami;
     private SkinnedMeshRenderer m_SkinnedMeshRenderer;
     private Transform m_charMeshPivot;
+    private SpriteRenderer m_fadePlaneRenderer;
+
 
     private bool m_FacingRight = true;  // For determining which way the player is currently facing.
     private CharacterShapes currentCharacterShape = CharacterShapes.Fox; // Shape1 is our default shape
@@ -43,8 +47,8 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
     private float currentBirdWingCooldownTime = 0f;
     private float currMoveVal = 0f;
     private bool doubleJumped = false;
-
     private int blossomCounter = 0;
+    private bool fadeStartet = false;
 
     private void Awake()
     {
@@ -56,6 +60,7 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
         m_CharachterStatus_Origami = GetComponent<CharachterStatus_Origami>();
         m_charMeshPivot = transform.Find("char_mesh_pivot");
         m_SkinnedMeshRenderer = m_charMeshPivot.GetComponentInChildren<SkinnedMeshRenderer>();
+        m_fadePlaneRenderer = fadeToWhitePlane.GetComponent<SpriteRenderer>();
 
         ShapeShift(CharacterShapes.Fox);
     }
@@ -75,7 +80,39 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
                 doubleJumped = false;
             }
         }
+
+
+        // game ends if at least 5 blossoms have been collected
+        if (blossomCounter >= 5)
+        {
+            if (!fadeStartet)
+            {
+                fadeStartet = true;
+                StartCoroutine("FadeToWhite");
+            }
+            ShapeShift(CharacterShapes.Fox);
+            if (m_fadePlaneRenderer.color.a >= 1f)
+            {
+                SceneManager.LoadScene("story_end");
+            }
+        }
     }
+
+
+    IEnumerator FadeToWhite()
+    {
+        float ElapsedTime = 0.0f;
+        float TotalTime = 4.0f;
+        Color c = m_fadePlaneRenderer.color;
+        while (ElapsedTime < TotalTime)
+        {
+            ElapsedTime += Time.deltaTime;
+            c.a = Mathf.Lerp(0f, 1f, (ElapsedTime / TotalTime));
+            m_fadePlaneRenderer.color = c;
+            yield return null;
+        }
+    }
+
 
     public void Move(float move, bool crouch, bool jump, CharacterShapes shape)
     {

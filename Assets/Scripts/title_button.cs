@@ -3,23 +3,23 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 
 
-public class start_game : MonoBehaviour {
+public class title_button : MonoBehaviour {
 
 
 
 	public void OnClick()  {
 
-		SceneManager.LoadScene("Level_Start");
+		SceneManager.LoadScene("story");
 	}
 
 
 	// Use this for initialization
 	void Start () {
-	
+
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 }

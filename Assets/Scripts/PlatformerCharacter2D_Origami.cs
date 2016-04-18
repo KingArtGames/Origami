@@ -23,6 +23,7 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
     [SerializeField] private float m_BirdWingCooldown = 1f;
 
     [SerializeField] private float blendSpeed = 8f;          // Speed used for blending
+    [SerializeField] private float blendDelay = 8f;
     [SerializeField] private bool m_AirControl = false;      // Whether or not a player can steer while jumping;
     [SerializeField] private LayerMask m_WhatIsGround;       // A mask determining what is ground to the character
     [SerializeField] private GameObject fadeToWhitePlane;
@@ -207,7 +208,7 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
             }
             else
             {
-                m_SkinnedMeshRenderer.SetBlendShapeWeight(i, Mathf.Lerp(0, 100, (currWeight / 100) - Time.deltaTime * blendSpeed));
+                m_SkinnedMeshRenderer.SetBlendShapeWeight(i, Mathf.Lerp(0, 100, (currWeight / 100) - Time.deltaTime * blendSpeed * blendDelay));
             }
         }
 

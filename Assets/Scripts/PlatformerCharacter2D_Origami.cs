@@ -39,7 +39,8 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
     private SkinnedMeshRenderer m_SkinnedMeshRenderer;
     private Transform m_charMeshPivot;
     private SpriteRenderer m_fadePlaneRenderer;
-
+    private GameObject char_mesh;
+    private Renderer rend;
 
     private bool m_FacingRight = true;  // For determining which way the player is currently facing.
     private CharacterShapes currentCharacterShape = CharacterShapes.Fox; // Shape1 is our default shape
@@ -50,6 +51,9 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
     private bool doubleJumped = false;
     private int blossomCounter = 0;
     private bool fadeStartet = false;
+    public Material FoxMat;
+    public Material FishMat;
+    public Material BirdMat;
 
     private void Awake()
     {
@@ -64,6 +68,7 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
         m_fadePlaneRenderer = fadeToWhitePlane.GetComponent<SpriteRenderer>();
 
         ShapeShift(CharacterShapes.Fox);
+        AudioSource audio = GetComponent<AudioSource>();
     }
 
 
@@ -172,6 +177,10 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
             if (currentBirdWingCooldownTime == 0)
                 doubleJumped = false;
         }
+        if (currentCharacterShape == CharacterShapes.Fish)
+        {
+            doubleJumped = false;
+        }
 
         Vector2 moveDirection = m_Rigidbody2D.velocity;
         if (moveDirection != Vector2.zero)
@@ -195,9 +204,18 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
             newChar = currentCharacterShape;
 
         // assign requested shape to current character shape
+        if (currentCharacterShape != newChar)
+        {
+            GetComponent<AudioSource>().Play();
+            if (newChar.ToString() == "Fox")
+                GetComponentInChildren<Renderer>().material = FoxMat;
+            if (newChar.ToString() == "Bird")
+                GetComponentInChildren<Renderer>().material = BirdMat;
+            if (newChar.ToString() == "Fish")
+                GetComponentInChildren<Renderer>().material = FishMat;
+            //Debug.Log("Why");
+        }
         currentCharacterShape = newChar;
-
-
         // process blend weights
         for (int i = 0; i < numBlendShapes; i++)
         {
@@ -230,7 +248,7 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
                 break;
             case CharacterShapes.Fish: // fish
                 // main Settings
-                m_MaxSpeed = 10f;
+                m_MaxSpeed = 3f;
                 m_AirSpeed = 5f;
                 m_GroundToAirSpeedFactor = 5f;
                 m_JumpForce = 200f;
@@ -238,7 +256,7 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
                 m_TurnSpeed = 8f;
 
                 // rigid body settings
-                m_Rigidbody2D.gravityScale = 1;
+                m_Rigidbody2D.gravityScale = 1f;
                 break;
             case CharacterShapes.Bird: // bird
                 // main Settings

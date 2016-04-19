@@ -177,10 +177,6 @@ public class PlatformerCharacter2D_Origami : MonoBehaviour
             if (currentBirdWingCooldownTime == 0)
                 doubleJumped = false;
         }
-        if (currentCharacterShape == CharacterShapes.Fish)
-        {
-            doubleJumped = false;
-        }
 
         Vector2 moveDirection = m_Rigidbody2D.velocity;
         if (moveDirection != Vector2.zero)
